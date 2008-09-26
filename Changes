@@ -1,0 +1,6 @@
+---
+version: 0.01
+date:    Fri Sep 26 01:20:56 PDT 2008
+changes:
+- First Release
+- This module used itself to make the dist and ship it to CPAN!
