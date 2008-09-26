@@ -1,4 +1,9 @@
 ---
+version: 0.02
+date:    Fri Sep 26 01:37:13 PDT 2008
+changes:
+- 'make upload' now tests and commits first.
+---
 version: 0.01
 date:    Fri Sep 26 01:20:56 PDT 2008
 changes:

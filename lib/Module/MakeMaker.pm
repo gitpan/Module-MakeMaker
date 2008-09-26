@@ -11,7 +11,7 @@ use Cwd;
 use File::Find::Rule;
 use File::ShareDir;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new {
     my $class = shift;
@@ -209,7 +209,7 @@ sub create_config {
     $self->render_template(\ <<'...', 'MMM.yaml');
 name: Module-MakeMaker
 abstract: Abstract Goes Here
-version: '0.01'
+version: '0.02'
 # install_script: bin/my-script
 # install_share: share
 # requires:
@@ -236,7 +236,7 @@ sub commit {
     print @lines;
     if (not @lines) {
         print "Nothing to commit.\n\n";
-        system("mmm");
+        system("mmm; make init");
         return;
     }
     if (grep /^\?/, @lines) {
@@ -258,7 +258,7 @@ sub commit {
     print "$vcs commit\n";
     system("$vcs commit");
     print "$vcs commit complete!\n\n";
-    system("mmm");
+    system("mmm; make init");
 }
 
 sub _next {
