@@ -21,5 +21,8 @@ share/template/Makefile.PL
 share/template/MANIFEST.SKIP
 share/template/MANIFEST.SKIP.STANDARD
 share/template/mmm.mk
-share/template/pod-footer
+share/template/MMM.yaml
+share/template/module-begin
+share/template/pod-begin
+share/template/pod-end
 t/test.t

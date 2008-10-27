@@ -11,7 +11,7 @@ use Cwd;
 use File::Find::Rule;
 use File::ShareDir;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub new {
     my $class = shift;
@@ -150,20 +150,20 @@ sub get_config {
         -e 'MMM/config.yaml' ? Cwd::abs_path('MMM/config.yaml') :
         '';
 
-    $config->{gmtime} = gmtime;
+    $config->{gmtime} = gmtime (). ' GMT';
 
     $self->{config} = $config;
 }
 
 sub make_makefile {
     my $self = shift;
-    $self->render_template('Makefile', 'Makefile');
+    $self->render_template('Makefile', $self->{config}, 'Makefile');
     print "Makefile created.\n";
 }
 
 sub cpan_makefile {
     my $self = shift;
-    $self->render_template('mmm.mk', 'cpan/mmm.mk');
+    $self->render_template('mmm.mk', $self->{config}, 'cpan/mmm.mk');
     print "cpan/mmm.mk created.\n";
 }
 
@@ -175,13 +175,13 @@ sub tt_yaml {
 
 sub render_template {
     my $self = shift;
-    my ($template, $output, @options) = @_;
+    my ($template, $data, $output, %options) = @_;
     my $tt = tt
         ->output($output)
         ->path($self->{config}{mmm_path})
-        ->data($self->{config});
-    for my $option (@options) {
-        $tt->$option();
+        ->data($data);
+    for my $option (keys %options) {
+        $tt->$option($options{$option});
     }
     $tt->render($template);
 }
@@ -200,22 +200,26 @@ sub ask_create_config {
         $answer =~ s/n(o)?/n/i;
     }
     return 1 if $answer eq 'n';
-    $self->create_config;
+    $self->create_config($self->default_data);;
     return 1;
+}
+
+sub default_data {
+    my $self = shift;
+    my $name = Cwd::cwd();
+    $name =~ s/[\/\\]*$//;
+    $name =~ s/.*[\/\\]//;
+    return {
+        name => $name,
+        dist_name => $name,
+        version => '0.01',
+    };
 }
 
 sub create_config {
     my $self = shift;
-    $self->render_template(\ <<'...', 'MMM.yaml');
-name: Module-MakeMaker
-abstract: Abstract Goes Here
-version: '0.02'
-# install_script: bin/my-script
-# install_share: share
-# requires:
-# - YAML::XS
-# - File::Find::Rule: '0.30'
-...
+    my $data = shift;
+    $self->render_template('MMM.yaml', $data, 'MMM.yaml');
     print <<'...';
 MMM.yaml has been created.
 Please edit it now.
@@ -341,8 +345,6 @@ To get started, run the C<mmm> command in your new or existing module
 directory. It will set up things for you and tell you what you need
 to do next.
 
-=encoding utf8
-
 =head1 AUTHOR
 
 Ingy döt Net <ingy@cpan.org>
@@ -357,3 +359,4 @@ under the same terms as Perl itself.
 See http://www.perl.com/perl/misc/Artistic.html
 
 =cut
+

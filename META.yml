@@ -23,4 +23,4 @@ requires:
   Template::Toolkit::Simple: 0
   YAML::XS: 0
   perl: 5.8.3
-version: 0.02
+version: 0.03

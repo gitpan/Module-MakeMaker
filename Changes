@@ -1,4 +1,9 @@
 ---
+version: 0.03
+date:    Mon Oct 27 16:45:39 PDT 2008
+changes:
+- Generate a new MMM.yaml file correctly.
+---
 version: 0.02
 date:    Fri Sep 26 01:37:13 PDT 2008
 changes:
